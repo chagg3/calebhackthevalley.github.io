@@ -7,7 +7,18 @@
 <body>
 
 <script type="text/javascript">
-var gender = ""; 
+var valAnger; 
+var valContempt;
+var valDisgust;
+var valFear;
+var valHappiness;
+var valNeutral;
+var valSadness;
+var valSurprise;
+var valMoustache;
+var valSideburns;
+var valBeard;
+
     function processImage() {
         // **********************************************
         // *** Update or verify the following values. ***
@@ -56,8 +67,17 @@ var gender = "";
         .done(function(data) {
             // Show formatted JSON on webpage.
             $("#CalebLmao").val(JSON.stringify(data, null, 2));
-			gender = (data[0].faceAttributes.gender); 
-			surprise = (data[0].faceAttributes.surprise); 
+			valAnger = (data[0].faceAttributes.emotion.anger); 
+			valContempt = (data[0].faceAttributes.emotion.contempt);
+			valDisgust = (data[0].faceAttributes.emotion.disgust);
+			valFear = (data[0].faceAttributes.emotion.fear);
+			valHappiness = (data[0].faceAttributes.emotion.happiness);
+			valNeutral = (data[0].faceAttributes.emotion.neutral);
+			valSadness = (data[0].faceAttributes.emotion.sadness);
+			valSurprise = (data[0].faceAttributes.emotion.surprise);
+			valMoustache = (data[0].faceAttributes.facialHair.moustache);
+			valSideburns = (data[0].faceAttributes.facialHair.beard);
+			valBeard = (data[0].faceAttributes.facialHair.sideburns);
         })
         .fail(function(jqXHR, textStatus, errorThrown) {
             // Display error message.
@@ -70,8 +90,19 @@ var gender = "";
 	
 	function displayData ()
 	{
-		alert ("Congratulations! You are a " + gender);
-		document.getElementById("demo").innerHTML = "Displayed text AFTER analyzing:" + gender; 
+		alert ("Your data has been processed!"); 
+		document.getElementById("demo").innerHTML = "Data:"; 
+		document.getElementById("demo").innerHTML = "Anger Levels:" + valAnger;
+		document.getElementById("demo").innerHTML = "Contempt Levels:" + valContempt;
+		document.getElementById("demo").innerHTML = "Disgust Levels:" + valDisgust;
+		document.getElementById("demo").innerHTML = "Fear Levels:" + valFear;
+		document.getElementById("demo").innerHTML = "Happiness Levels:" + valHappiness;
+		document.getElementById("demo").innerHTML = "Neutral Levels:" + valNeutral;
+		document.getElementById("demo").innerHTML = "Sadness Levels:" + valSadness;
+		document.getElementById("demo").innerHTML = "Surprise Levels:" + valSurprise;
+		document.getElementById("demo").innerHTML = "Moustache Levels:" + valMoustache;
+		document.getElementById("demo").innerHTML = "Sideburn Levels:" + valSideburns;
+		document.getElementById("demo").innerHTML = "Beard Levels:" + valBeard;
 	}
 </script>
 
