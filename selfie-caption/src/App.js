@@ -1,6 +1,8 @@
 import React, { Component } from 'react';
 import { Chart } from 'react-google-charts';
-import './App.css';
+import './App.css'
+
+const Quotes = require('./quotes.js');
 
 class App extends Component {
     constructor(props) {
@@ -9,6 +11,8 @@ class App extends Component {
             imageLink: "NULL",
             statDisplay: {display: "none"},
             calledOnImage: false,
+
+            genQuote: "Hit 'Generate Caption' on an analyzed image to generate a new quote!",
 
             valAnger: 1,
             valContempt: 1,
@@ -35,17 +39,15 @@ class App extends Component {
                 }}>
                 </div>
                 <div className="pt-4">
-                    <p>Input an image URL here.</p>
+                    <p>Input a valid image URL here and click "Analyze Face."</p>
                 </div>
                 <div className="container-fluid col-md-8 col-sm-8 pb-4">
                     <input type="text" className="form-control" onChange={this.onTextChange.bind(this)}/>
                 </div>
                 <div className="container-fluid pb-4">
                     <button type="button" className="btn btn-default"
-                            onClick={this.onCallBtnChange.bind(this)}>Analyze
+                            onClick={this.onCallBtnChange.bind(this)}>Analyze Face
                     </button>
-                    <button type="button" className="btn btn-default"
-                            style={{marginRight: '10px', marginLeft: '10px'}}>Generate Caption</button>
                 </div>
                 <div className="pb-4">
                     <img style={{
@@ -53,6 +55,12 @@ class App extends Component {
                     }} src={this.state.imageLink} alt="Link Invalid"/>
                 </div>
                 <div>
+                    <p>{this.state.genQuote}</p>
+                </div>
+                <div>
+                    <button type="button" className="btn btn-default col-md-12 pb-2" style={{
+                        display: (this.state.calledOnImage ? 'block' : 'none')}}
+                            onClick={this.onGenButtonChange.bind(this)}>Generate Caption</button>
                     <button type="button" className="btn btn-default col-md-12" style={{
                         display: (this.state.calledOnImage ? 'block' : 'none')}}
                             onClick={this.onStatBtnChange.bind(this)}>
@@ -146,6 +154,15 @@ class App extends Component {
                 this.setState({calledOnImage: true});
             }
         ).catch(console.log);
+    }
+
+    onGenButtonChange() {
+        let ratingArr = [this.state.valAnger, this.state.valContempt,
+            this.state.valDisgust, this.state.valFear, this.state.valHappiness,
+            this.state.valNeutral, this.state.valSadness, this.state.valSurprise];
+        let maxRating = Math.max(...ratingArr);
+        let emotionIndex = ratingArr.indexOf(maxRating);
+        this.setState({genQuote: Quotes.quotes[emotionIndex][Math.floor(Math.random() * Quotes.quotes[emotionIndex].length)]});
     }
 }
 
