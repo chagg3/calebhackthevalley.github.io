@@ -1,97 +1,152 @@
 import React, { Component } from 'react';
-import { render } from 'react-dom';
 import { Chart } from 'react-google-charts';
 import './App.css';
 
-var valAnger = 1;
-var valContempt = 1;
-var valDisgust = 1;
-var valFear = 1;
-var valHappiness = 1;
-var valNeutral = 1;
-var valSadness = 1;
-var valSurprise = 1;
-var valMoustache = 24;
-var valSideburns = 12;
-var valBeard = 54;
-
 class App extends Component {
-  constructor(props){
-      super(props);
-      this.state = {
-          imageLink: "NULL",
-          statDisplay: {display: "none"}
-      };
-  }
+    constructor(props) {
+        super(props);
+        this.state = {
+            imageLink: "NULL",
+            statDisplay: {display: "none"},
+            calledOnImage: false,
 
-  render() {
-    return (
-      <div className = "App">
-          <div style={{
-              background: 'lightblue',
-              height: '150px'
-          }}>
-          </div>
-          <div className = "pt-4">
-              <p>Input an image URL here.</p>
-          </div>
-          <div className = "container-fluid col-md-8 col-sm-8 pb-4">
-              <input type="text" className="form-control" onChange={this.onTextChange.bind(this)}/>
-          </div>
-          <div className = "pb-4">
-              <button type="button" className="btn btn-default" style={{marginRight:'10px'}}>Generate Caption</button>
-              <button type="button" className="btn btn-default" style={{marginLeft:'10px'}}
-                  onClick={this.onStatBtnChange.bind(this)}>
-                  {this.state.statDisplay.display === "none" ? "Show" : "Hide"} Statistics</button>
-          </div>
-          <div>
-              <img src={this.state.imageLink} alt="Link Invalid"/>
-          </div>
-          <div style={this.state.statDisplay}>
-              <Chart
-                  chartType="PieChart"
-                  data={[['Emotion', 'Level'],
-                      ['Anger', valAnger],
-                      ['Contempt', valContempt],
-                      ['Disgust', valDisgust],
-                      ['Fear', valFear],
-                      ['Happiness', valHappiness],
-                      ['Neutral', valNeutral],
-                      ['Sadness', valSadness],
-                      ['Surprise', valSurprise]]}
-                  options={{}}
-                  graph_id="PieChart"
-                  width="100%"
-                  height="400px"/>
+            valAnger: 1,
+            valContempt: 1,
+            valDisgust: 1,
+            valFear: 1,
+            valHappiness: 1,
+            valNeutral: 1,
+            valSadness: 1,
+            valSurprise: 1,
 
-          </div>
-          <div style={this.state.statDisplay}>
-              <Chart
-              chartType="Gauge"
-              data={[['Label', 'Value'],
-                  ['Moustache', valMoustache],
-                  ['Beard', valBeard],
-                  ['Sideburns', valSideburns]]}
-              options={{}}
-              graph_id="Gauge"
-              width="100%"
-              height="400px"/>
-          </div>
-      </div>
-    );
-  }
+            valMoustache: 0,
+            valSideburns: 0,
+            valBeard: 0,
+            valBald: 0
+        }
+    }
 
-  onTextChange(e){
-      console.log(this.state);
-      this.setState({imageLink: e.target.value});
-  }
+    render() {
+        return (
+            <div className="App">
+                <div style={{
+                    background: 'lightblue',
+                    height: '150px'
+                }}>
+                </div>
+                <div className="pt-4">
+                    <p>Input an image URL here.</p>
+                </div>
+                <div className="container-fluid col-md-8 col-sm-8 pb-4">
+                    <input type="text" className="form-control" onChange={this.onTextChange.bind(this)}/>
+                </div>
+                <div className="container-fluid pb-4">
+                    <button type="button" className="btn btn-default"
+                            onClick={this.onCallBtnChange.bind(this)}>Analyze
+                    </button>
+                    <button type="button" className="btn btn-default"
+                            style={{marginRight: '10px', marginLeft: '10px'}}>Generate Caption</button>
+                </div>
+                <div className="pb-4">
+                    <img style={{
+                        height: '500px'
+                    }} src={this.state.imageLink} alt="Link Invalid"/>
+                </div>
+                <div>
+                    <button type="button" className="btn btn-default col-md-12" style={{
+                        display: (this.state.calledOnImage ? 'block' : 'none')}}
+                            onClick={this.onStatBtnChange.bind(this)}>
+                        {this.state.statDisplay.display === "none" ? "Show" : "Hide"} Statistics
+                    </button>
+                </div>
+                <div style={this.state.statDisplay}>
+                    <Chart
+                        chartType="PieChart"
+                        data={[['Emotion', 'Level'],
+                            ['Anger', this.state.valAnger],
+                            ['Contempt', this.state.valContempt],
+                            ['Disgust', this.state.valDisgust],
+                            ['Fear', this.state.valFear],
+                            ['Happiness', this.state.valHappiness],
+                            ['Neutral', this.state.valNeutral],
+                            ['Sadness', this.state.valSadness],
+                            ['Surprise', this.state.valSurprise]]}
+                        options={{}}
+                        graph_id="PieChart"
+                        width="100%"
+                        height="400px"/>
 
-  onStatBtnChange(){
-      let displayMode = this.state.statDisplay.display === "none" ? "block" : "none";
-      console.log(displayMode);
-      this.setState({statDisplay: {display : displayMode}});
-      console.log(this.state);
-  }
+                </div>
+                <div style={this.state.statDisplay}>
+                    <Chart
+                        chartType="Gauge"
+                        data={[['Label', 'Value'],
+                            ['Moustache', this.state.valMoustache],
+                            ['Beard', this.state.valBeard],
+                            ['Sideburns', this.state.valSideburns],
+                            ['Baldness', this.state.valBald]]}
+                        options={{
+                            width: '400px',
+                            height: '166px',
+                            redFrom: '90',
+                            redTo: '100',
+                            yellowFrom:'75',
+                            yellowTo: '90',
+                            minorTicks: '5'
+                        }}
+                        graph_id="Gauge"
+                        width="100%"
+                        height="200px"/>
+                </div>
+            </div>
+        );
+    }
+
+    onTextChange(e) {
+        this.setState({calledOnImage: false});
+        this.setState({imageLink: e.target.value});
+    }
+
+    onStatBtnChange() {
+        let displayMode = this.state.statDisplay.display === "none" ? "block" : "none";
+        this.setState({statDisplay: {display: displayMode}});
+    }
+
+    onCallBtnChange() {
+        fetch("https://eastus.api.cognitive.microsoft.com/face/v1.0/detect?" +
+            "returnFaceId=true&returnFaceLandmarks=false&returnFaceAttributes=" +
+            "age,gender,headPose,smile,facialHair,glasses,emotion,hair,makeup," +
+            "occlusion,accessories,blur,exposure,noise", {
+            method: "POST",
+            headers: {
+                "Content-Type": "application/json",
+                "Ocp-Apim-Subscription-Key": "453736a436de4f6aa50216a0dc0f7033"
+            },
+            body: JSON.stringify({
+                "url": this.state.imageLink
+            })
+        }).then(res => {
+            return res.json();
+        }).catch(console.log).then(
+            // Update all values
+            data => {
+                this.setState({valAnger: data[0].faceAttributes.emotion.anger});
+                this.setState({valContempt: data[0].faceAttributes.emotion.contempt});
+                this.setState({valDisgust: data[0].faceAttributes.emotion.disgust});
+                this.setState({valFear: data[0].faceAttributes.emotion.fear});
+                this.setState({valHappiness: data[0].faceAttributes.emotion.happiness});
+                this.setState({valNeutral: data[0].faceAttributes.emotion.neutral});
+                this.setState({valSadness: data[0].faceAttributes.emotion.sadness});
+                this.setState({valSurprise: data[0].faceAttributes.emotion.surprise});
+                this.setState({valMoustache: data[0].faceAttributes.facialHair.moustache * 100});
+                this.setState({valSideburns: data[0].faceAttributes.facialHair.sideburns * 100});
+                this.setState({valBeard: data[0].faceAttributes.facialHair.beard * 100});
+                this.setState({valBald: data[0].faceAttributes.hair.bald * 100});
+
+                this.setState({calledOnImage: true});
+            }
+        ).catch(console.log);
+    }
 }
 
 export default App;
