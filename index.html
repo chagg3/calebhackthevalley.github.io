@@ -3,11 +3,92 @@
 <head>
     <title>Detect Faces Sample</title>
     <script src="http://ajax.googleapis.com/ajax/libs/jquery/1.9.0/jquery.min.js"></script>
-</head>
-<body>
+	<!--Load the AJAX API-->
+		<script type="text/javascript" src="https://www.gstatic.com/charts/loader.js"></script>
+		<script type="text/javascript">
+		
+		var valContempt=1;
+		var valDisgust=1;
+		var valFear=1;
+		var valHappiness=1;
+		var valNeutral=1;
+		var valSadness=1;
+		var valSurprise=1;
+		var valMoustache=1;
+		var valSideburns=1;
+		var valBeard=1;
 
-<script type="text/javascript">
-var gender = ""; 
+		// Load the Visualization API and the corechart package.
+		google.charts.load('current', {'packages':['corechart']});
+		google.charts.load('current', {'packages':['gauge']});
+
+		// Set a callback to run when the Google Visualization API is loaded.
+		function lmao ()
+		{
+			alert ("LMAO"); 
+			google.charts.setOnLoadCallback(drawEmotion);
+			google.charts.setOnLoadCallback(drawHairy);
+		}
+		// Callback that creates and populates a data table,
+		// instantiates the pie chart, passes in the data and
+		// draws it.
+		function drawEmotion() {
+
+			// Create the data table.
+			var data = new google.visualization.DataTable();
+			data.addColumn('string', 'Topping');
+			data.addColumn('number', 'Slices');
+			data.addRows([
+			['Anger', valAnger],
+			['Contempt', valContempt],
+			['Disgust', valDisgust],
+			['Fear', valFear],
+			['Happiness', valHappiness],
+			['Neutral', valNeutral],
+			['Sadness', valSadness],
+			['Surprise', valSurprise]
+        ]);
+
+        // Set chart options
+        var options = {'title':'What you are feeling',
+                       'width':400,
+                       'height':300};
+
+        // Instantiate and draw our chart, passing in some options.
+        var chart = new google.visualization.PieChart(document.getElementById('emotionChart_div'));
+        chart.draw(data, options);
+		}
+	  
+		function drawHairy() {
+			var data = google.visualization.arrayToDataTable([
+				['Label', 'Value'],
+				['Moustache', valMoustache],
+				['Beard', valBeard],
+				['Sideburns', valSideburns]
+			]);
+			
+			var options = {
+				width: 400, height: 166,
+				redFrom: .9, redTo: 1,
+				yellowFrom:.75, yellowTo: .90,
+				minorTicks: .1
+			};
+			
+			var chart = new google.visualization.Gauge(document.getElementById('hairyChart_div'));
+			chart.draw(data, options);
+		}
+		function showStats() {
+			var div = document.getElementById("stat_div");
+			if (div.style.display == "block") {
+				div.style.display = "none";
+			} 
+			else {
+				div.style.display = "block";
+			}
+		}
+		
+		var valAnger; 
+
     function processImage() {
         // **********************************************
         // *** Update or verify the following values. ***
@@ -56,8 +137,17 @@ var gender = "";
         .done(function(data) {
             // Show formatted JSON on webpage.
             $("#CalebLmao").val(JSON.stringify(data, null, 2));
-			gender = (data[0].faceAttributes.gender); 
-			surprise = (data[0].faceAttributes.surprise); 
+			valAnger = (data[0].faceAttributes.emotion.anger); 
+			valContempt = (data[0].faceAttributes.emotion.contempt);
+			valDisgust = (data[0].faceAttributes.emotion.disgust);
+			valFear = (data[0].faceAttributes.emotion.fear);
+			valHappiness = (data[0].faceAttributes.emotion.happiness);
+			valNeutral = (data[0].faceAttributes.emotion.neutral);
+			valSadness = (data[0].faceAttributes.emotion.sadness);
+			valSurprise = (data[0].faceAttributes.emotion.surprise);
+			valMoustache = (data[0].faceAttributes.facialHair.moustache);
+			valSideburns = (data[0].faceAttributes.facialHair.beard);
+			valBeard = (data[0].faceAttributes.facialHair.sideburns);
         })
         .fail(function(jqXHR, textStatus, errorThrown) {
             // Display error message.
@@ -70,10 +160,24 @@ var gender = "";
 	
 	function displayData ()
 	{
-		alert ("Congratulations! You are a " + gender);
-		document.getElementById("demo").innerHTML = "Displayed text AFTER analyzing:" + gender; 
+		alert ("Your data has been processed!"); 
+		document.getElementById("demo").innerHTML = "Data:"; 
+		document.getElementById("demo").innerHTML = "Anger Levels:" + valAnger;
+		document.getElementById("demo").innerHTML = "Contempt Levels:" + valContempt;
+		document.getElementById("demo").innerHTML = "Disgust Levels:" + valDisgust;
+		document.getElementById("demo").innerHTML = "Fear Levels:" + valFear;
+		document.getElementById("demo").innerHTML = "Happiness Levels:" + valHappiness;
+		document.getElementById("demo").innerHTML = "Neutral Levels:" + valNeutral;
+		document.getElementById("demo").innerHTML = "Sadness Levels:" + valSadness;
+		document.getElementById("demo").innerHTML = "Surprise Levels:" + valSurprise;
+		document.getElementById("demo").innerHTML = "Moustache Levels:" + valMoustache;
+		document.getElementById("demo").innerHTML = "Sideburn Levels:" + valSideburns;
+		document.getElementById("demo").innerHTML = "Beard Levels:" + valBeard;
 	}
-</script>
+		</script>
+		
+</head>
+<body>
 
 <p id = "demo"> </p> 
 
@@ -82,7 +186,7 @@ Enter the URL to an image that includes a face or faces, then click the <strong>
 <br><br>
 Image to analyze: <input type="text" name="inputImage" id="inputImage" value="https://upload.wikimedia.org/wikipedia/commons/c/c3/RH_Louise_Lillian_Gish.jpg" />
 <button onclick="processImage()">Analyze face</button>
-<button onclick="displayData()">Display data</button>
+<button onclick="lmao()">Display data</button>
 <br><br>
 <div id="wrapper" style="width:1020px; display:table;">
     <div id="jsonOutput" style="width:600px; display:table-cell;">
@@ -96,12 +200,17 @@ Image to analyze: <input type="text" name="inputImage" id="inputImage" value="ht
         <br><br>
         <img id="sourceImage" width="400" />
     </div>
+	
 </div>
-
-<!-- 
-<<<<<<< HEAD
+		<button onclick = "showStats()"> Stats </button>
+		<div id="stat_div" align = "center" style "display: none;">
+			<div id="emotionChart_div"></div>
+			<div id="hairyChart_div"></div>
+		</div>
 </body>
 </html>
+
+<!-- 
 =======
 
 
